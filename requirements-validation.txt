@@ -1,0 +1,14 @@
+# Dependencies for the hand-annotation tooling in validation/ ONLY.
+#
+# Deliberately a separate file from requirements.txt. The submission pipeline -- everything under
+# experiments/ that produces a scored CSV -- runs on numpy and pandas alone, exactly like the
+# scorer, and that has to stay true: a reproduction command the organisers run should not need a
+# video decoder. Nothing in validation/ is ever imported by an experiment.
+#
+#     pip install -r requirements-validation.txt
+#
+# opencv is here to seek frames in the tactical mp4 and draw the tracking over them, so a human
+# can stamp possession boundaries against what the camera actually shows.
+opencv-python
+numpy
+pandas

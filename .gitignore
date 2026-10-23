@@ -26,6 +26,26 @@ evaluation/results/*.csv
 evaluation/reports/
 evaluation/scoreboard.csv
 
+# -- hand-annotated validation set ----------------------------------------------------------------
+# validation/labels/*.csv ARE committed: they are a few dozen boundary stamps each, they are our
+# own annotation rather than anyone's ground truth, and the validation story in the technical
+# document is only checkable if they are in the repository. RULES.md permits hand-labelled data
+# used to validate a model; what it forbids is a hand-labelled *submission*.
+#
+# The expanded 199319-row files are generated from them by validation/expand.py in a second, so
+# they are build output and stay out.
+validation/gt/
+
+# -- derived tracking ---------------------------------------------------------------------------
+# Cached feature arrays built from the ATD by experiments/*/features.py. These are a frame-level
+# tracking export in a different file format -- ball positions and per-team distances for all
+# 199319 frames -- so the terms that cover the bundle cover these too, and RULES.md is explicit
+# that derived data which would reconstruct the original must not be published. They rebuild from
+# the bundle in about two seconds, so there is no reason to keep them anyway.
+experiments/*/cache/
+*.npy
+*.npz
+
 # -- gated data --------------------------------------------------------------------------------
 # data/ is committed empty, with only its README, so the folder participants are told to unpack
 # into actually exists in a fresh clone. Everything they put in it stays out of git.
