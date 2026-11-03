@@ -10,17 +10,78 @@ Two columns, because they measure different conventions and only one decides the
 `public` is the organisers' own 5 minutes; `pooled` adds our 15 hand-annotated ones (re-annotated
 2026-10-23, 32 possessions).
 
-| | public spellF1 | public poss (true 17) | pooled spellF1 | pooled macroF1 | full-match poss |
-|---|---|---|---|---|---|
-| baseline_smooth50 (published floor) | 0.326 | 26 | 0.248 | 0.664 | 594 |
-| baseline_smooth125 | 0.424 | 16 | 0.322 | 0.588 | 398 |
-| exp01 | 0.424 | 17 | 0.323 | 0.784 | 305 |
-| exp02 | 0.485 | 16 | 0.389 | 0.810 | 264 |
-| **exp03** | **0.503** | 14 | **0.442** | **0.826** | 242 |
+Scored against the **third-pass** hand labels (2026-11-03), which finally match the organisers'
+convention — see lesson 0b. All numbers below fell when the labels improved; that is the labels
+getting harder and more correct, not the models getting worse.
 
-Each experiment beats the last on both columns. The official convention implies **~360**
-possessions across the match, so every one of them under-segments, and exp03 most of all — that
-is now the biggest single error in the pipeline.
+| | public spellF1 | public poss (true 17) | pooled spellF1 | 5–95% | pooled macroF1 | full-match poss |
+|---|---|---|---|---|---|---|
+| baseline_smooth50 (published floor) | 0.326 | 26 | 0.234 | 0.180–0.294 | 0.648 | 594 |
+| baseline_smooth125 | 0.424 | 16 | 0.250 | 0.179–0.333 | 0.572 | 398 |
+| exp01 | 0.424 | 17 | 0.275 | 0.207–0.347 | 0.778 | 305 |
+| exp02 | 0.560 | 18 | 0.326 | 0.251–0.409 | 0.805 | 290 |
+| exp03 | 0.542 | 14 | 0.353 | 0.269–0.440 | 0.819 | 266 |
+| **exp04** | **0.629** | 11 | **0.396** | 0.305–0.491 | **0.821** | 243 |
+
+**The human ceiling is 0.894 spellF1 / 0.956 macroF1** (our own blind labels scored against the
+organisers' on the public window). exp03 is at 0.542. Most of the available ground is still
+ahead, and it is the possession layer: the dead-ball layer sits at 84.9% precision / 82.5%
+recall pooled.
+
+The bands still overlap heavily at 60 possessions, so the ordering is provisional — but exp04
+leads on every pooled column *and* on the organisers' own window, which is the strongest
+agreement between the two label sets so far.
+
+**Roughly two thirds of true possessions are still not found at all** (40 missed at IoU 0.5, a
+number that has not moved across three threshold settings). That, not boundary placement, is the
+wall.
+
+---
+
+## 0a. Thresholds chosen one at a time hide their interaction
+
+exp01 set the evidence margin at 2 m and never swept it again. exp02, exp03 and the margin fix
+all swept the *frame* threshold with the margin held fixed, or the margin with frames held fixed.
+Each sweep found a clean plateau and each was locally right.
+
+Swept **jointly** in exp04 they turned out to interact in an obvious-in-hindsight way: a looser
+margin admits weaker evidence, so it needs more frames of it. Moving from (1.5 m, 25 frames) to
+(1.25 m, 35 frames) took pooled spellF1 from 0.353 to 0.396 and the official window from 0.542 to
+0.629 — a bigger gain than any single-axis sweep had produced, from parameters that had both
+already been "tuned".
+
+**When two parameters trade off against each other, a one-at-a-time sweep is not a sweep.**
+
+---
+
+## 0b. The convention gap closed by watching four clips
+
+Lesson 0 found that our labels had 35% fewer possessions than the organisers'. What it could not
+say was *why*. Watching the four specific possessions we had missed answered it in one sitting:
+
+- **An interception counts as a possession, with no requirement of control.** Three of the four
+  were a defender getting a touch on the ball and immediately losing it. The official labels
+  start a new possession there; a human watching does not.
+- **A clearance counts the same way.**
+- **Possession survives the linesman's flag.** It ends at the whistle or the referee's raised
+  hand, not when the flag goes up.
+
+Note this **contradicts a plain reading of CHALLENGE.md**, which says "a simple touch of the ball
+without control" is not a change of possession. The ground truth is the authority — CHALLENGE.md
+says so itself — and the ground truth counts them. Where prose and labels disagree, go and watch
+the labels.
+
+Re-annotating on that rule took the hand labels from 11 possessions to **17 against the
+organisers' 17**, with zero unmatched boundaries in either direction, frame agreement 90.4% →
+**95.6%**, and spellF1 as a submission 0.714 → **0.894**. Possession-change timing came out at a
+median of −1.5 frames, which is exact.
+
+It also explained a tuning result we had measured but not understood: a looser evidence margin
+(2.0 m → 1.5 m) helps precisely because interceptions and clearances are brief contacts that a
+2 m margin suppresses.
+
+**Method worth repeating: when two label sets disagree, do not reason about the definition — get
+the list of specific disagreements and watch them.** `validation/towatch.py` generates it.
 
 ---
 
@@ -68,11 +129,10 @@ Both earlier decisions that were made on the hand labels alone reversed:
 | exp02's evidence threshold | 2 s | **1 s** — the official labels prefer it 0.485 to 0.462 and it gives 16/17 possessions against 9/17 |
 
 **What to take from it.** A hand-built validation set measures your convention, not the target's.
-Calibrate it against whatever official labels exist *before* tuning anything on it. Where a
-convention gap is systematic and measurable, correct the labels (`recalibrate.py` shifted the 16
-dead-ball ends) — and where it cannot be corrected, as with the missing short possessions, stop
-using those labels for that decision. The hand labels remain the authority for dead-ball
-detection, team accuracy and second-half coverage; they are not an authority on possession counts.
+Calibrate it against whatever official labels exist *before* tuning anything on it. A mechanical
+correction can hold the line in the meantime — a +22-frame shift on the dead-ball ends did, and
+was dropped once the labels were redone by hand, with a measured effect of 0.0006 macroF1 — but
+the real fix is to find out *why* the conventions differ and re-annotate. See lesson 0b.
 
 **Possession rate is the cheap sanity check.** The official convention runs at 3.4 possessions
 per minute, implying ~360 across the graded match. Any model far off that is wrong whatever

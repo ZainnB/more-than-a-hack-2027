@@ -20,14 +20,13 @@ Four windows, plus a pooled one:
 Per-window spellF1 is noisy -- each window holds 7-17 possessions, so one possession moves it by
 several points -- and the pooled row has a band of roughly +/-0.1 even at 44.
 
-**But the pooled row is not a neutral referee.** calibrate.py measured the hand labels at 35%
-fewer possessions than the organisers' own, because a human does not register a 0.8 s touch as a
-possession and the official labels, derived mechanically from corrected tracking, do. Fifteen of
-the twenty pooled minutes carry that bias, so pooled spellF1 systematically rewards merging.
+The hand labels were re-annotated on 2026-11-03 against the organisers' actual convention --
+interceptions and clearances count as possessions -- and now run at 2.93 possessions/min against
+the official 3.40, from 1.87 on the first pass. On the public window, where the two can be
+compared directly, they match 17 possessions to 17 with no unmatched boundaries either way.
 
-So: read `public` for anything about possession counts or thresholds, and the pooled row for
-dead ball, team accuracy and macroF1, where the conventions agree. The dead-ball *timing*
-difference has been corrected -- see recalibrate.py -- but the possession count cannot be.
+So the pooled row is now worth reading on its own terms. Keep checking it against `public`
+anyway: that is the only column scored on labels we did not make.
 """
 
 import argparse
@@ -122,8 +121,7 @@ if __name__ == '__main__':
     print("READ THE 'public' COLUMN FIRST. It is the only window with the organisers' own labels,")
     print("and validation/calibrate.py measured our hand labels at 35% fewer possessions than")
     print("theirs -- so 'all20' is 15 biased minutes against 5 authoritative ones, and its")
-    print("spellF1 rewards merging. macroF1 and the dead-ball columns are far less affected; the")
-    print("dead-ball *timing* was corrected by validation/recalibrate.py.\n")
+    print("spellF1 rewards merging. macroF1 and the dead-ball columns are far less affected.\n")
     print("spellF1 by window (possessions predicted / true in brackets)\n")
     header = "  {:<20}".format("submission") + "".join(
         "{:>16}".format(w) for w in order)

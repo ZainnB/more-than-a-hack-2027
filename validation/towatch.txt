@@ -1,0 +1,67 @@
+OFFICIAL POSSESSIONS OUR ANNOTATION DOES NOT REPRODUCE
+public window only -- the one place the organisers' labels exist
+their 17 possessions against our 11
+
+  video      match        dur  official  we said
+  08:26.60   00:59.2     7.4s  A         D/H
+  10:13.84   02:46.4     0.8s  H         A
+  10:30.64   03:03.2     1.3s  H         A
+  11:31.72   04:04.3     3.5s  H         A/D
+
+  4 to watch. These are the convention gap, frame-accurate.
+
+------------------------------------------------------------------------
+
+NEAR-MISS POSSESSIONS -- candidates, not known errors
+places the model saw 10-24 frames of evidence for the other team and
+needed 25 to act. the most likely dropped short possessions.
+
+  video      match     frames  would be
+  44:24.36   36:57.0       24  A
+  82:08.80   51:19.1       24  A
+  84:08.20   53:18.5       24  A
+  13:57.96   06:30.6       23  A
+  93:54.12   63:04.4       23  A
+  81:29.84   50:40.2       21  H
+  95:02.56   64:12.9       21  A
+  16:18.12   08:50.7       20  A
+  16:37.36   09:10.0       20  A
+  120:35.16  89:45.5       19  A
+  44:56.24   37:28.8       18  A
+  101:04.32  70:14.6       18  A
+  24:57.64   17:30.2       17  A
+  26:52.16   19:24.8       17  A
+  29:58.28   22:30.9       17  A
+  82:33.04   51:43.4       17  A
+  08:17.08   00:49.7       16  A
+  17:45.08   10:17.7       16  A
+  07:50.72   00:23.3       15  A
+  18:22.76   10:55.4       15  H
+  21:45.08   14:17.7       15  A
+  42:21.96   34:54.6       15  H
+  55:52.08   48:24.7       15  A
+  88:45.12   57:55.4       15  A
+  16:44.24   09:16.8       14  A
+  25:15.80   17:48.4       14  A
+  44:47.36   37:20.0       14  A
+  78:19.64   47:30.0       14  A
+  07:39.68   00:12.3       13  H
+  22:44.40   15:17.0       13  A
+  57:25.32   49:57.9       13  A
+  80:42.28   49:52.6       13  H
+  84:01.80   53:12.1       13  A
+  99:01.84   68:12.2       13  H
+  122:28.64  91:39.0       13  H
+  11:35.28   04:07.9       11  A
+  34:30.04   27:02.6       11  A
+  36:17.44   28:50.0       11  A
+  38:31.88   31:04.5       11  H
+  77:04.88   46:15.2       11  H
+  15:28.32   08:00.9       10  H
+  19:08.60   11:41.2       10  A
+  55:58.12   48:30.7       10  A
+
+  43 in the whole match.
+  Note that is far short of the ~118 possessions needed to reach the
+  official convention's ~360, so the frame threshold is not the main
+  constraint -- the 2 m evidence margin is. See the README.

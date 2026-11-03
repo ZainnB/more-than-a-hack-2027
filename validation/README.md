@@ -37,6 +37,8 @@ compare.py     every submission x every window, plus the pooled 20 minutes, with
 calibrate.py   a blind hand annotation of the PUBLIC window vs the official labels: how closely
                our labelling convention matches the organisers', boundary by boundary, and the
                human ceiling. The public annotation is never merged into val15 or the pool.
+towatch.py     the list of moments to go and watch: official possessions our labels miss, and
+               the model's near-misses, with video and match-clock timestamps
 compare.csv    the last compare.py run, every number
 labels/        the hand annotation -- committed; it is the source of truth
 gt/            built from labels/ by expand.py -- gitignored
@@ -58,17 +60,19 @@ two conventions can be compared directly (`python validation/calibrate.py`). Mea
 | frame agreement | 90.4% — macroF1 0.904, the **human ceiling** |
 | possessions | **11 against the official 17** — short ones merged, a 35% under-count |
 | dead-ball starts | median offset **0 frames** — the conventions agree |
-| dead-ball ends | median **−22 frames (0.9 s early)** — corrected by `recalibrate.py` |
+| dead-ball ends | median **−22 frames (0.9 s early)** on the first pass; hand-corrected since |
 
-The official labels come from corrected tracking, mechanically, so they contain possessions of
-0.8 s and 1.3 s that a human watching video does not mark. Consequences:
+The official labels come from corrected tracking, mechanically. Watching the four possessions we
+had missed showed why: **an interception or a clearance counts as a possession, with no
+requirement that the player control the ball**, and possession survives the linesman's flag until
+the whistle. Re-annotating on that rule took the public window from 11 possessions to 17 against
+their 17, with zero unmatched boundaries. Consequences:
 
 - **Use `public` for possession counts and thresholds.** It is the only window on the convention
   the competition scores against. This reversed two earlier decisions — see
   [../experiments/LEARNINGS.md](../experiments/LEARNINGS.md) lesson 0.
 - **Use the pooled 20 minutes for dead ball, team accuracy and macroF1**, where the conventions
   agree and the extra sample is worth having.
-- `recalibrate.py` shifted the 16 dead-ball ends in win1–win3 by +22 frames. Originals are kept
   as `*.asannotated.csv` and `--revert` restores them.
 - The possession under-count **cannot** be corrected mechanically; those boundaries were never
   marked. Fixing it means re-annotating with brief possessions marked explicitly.

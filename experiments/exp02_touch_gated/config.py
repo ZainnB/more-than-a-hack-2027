@@ -87,8 +87,29 @@ K_CONFIRM = 25
 MIN_POSSESSION_S = 0.3
 
 # How much nearer, in metres, a team must be for a frame to count as evidence it has the ball.
-# Kept at exp01's value so the comparison between the two experiments isolates touch gating.
-MARGIN_M = 2.0
+#
+# Held at exp01's 2.0 through exp01-exp03 so each comparison isolated one change. Swept properly
+# once under-segmentation became the main error, and it turned out to be the binding constraint
+# all along -- not the frame threshold everything else had been tuned on. Scored against the
+# organisers' own labels:
+#
+#     margin   official spellF1   poss (17)   full-match poss
+#     2.0      0.503              14          242
+#     1.5      0.542              14          266     <- chosen
+#     1.0      0.542              14          287
+#     0.5      0.497              16          319
+#     0.0      0.469              18          345
+#
+# 1.5 and 1.0 tie at the top and 1.5 is the more conservative of the two. The reason a looser
+# margin helps is now understood rather than merely measured: watching the public window's
+# missed possessions showed the official labels count an **interception or a clearance** as a
+# possession, with no requirement that the player bring the ball under control. Those are
+# exactly the contacts a 2 m margin suppresses.
+#
+# Note this reading contradicts a plain reading of CHALLENGE.md, which says "a simple touch of
+# the ball without control" is not a change of possession. The ground truth is the authority --
+# CHALLENGE.md says so itself -- and the ground truth counts them.
+MARGIN_M = 1.5
 
 # What "the new team retained the ball" means when confirming a touch: over the K_CONFIRM frames
 # after it, at least this fraction of the frames where the team call can be made favour the new
