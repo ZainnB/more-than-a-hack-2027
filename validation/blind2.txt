@@ -1,0 +1,90 @@
+BLIND WINDOW blind2   frames 33597-41097   seed 2
+video 22:23.88 - 27:23.88     match 14:56.5 - 19:56.5     half 1
+
+Nothing below is a label. It is what exp04 claims, written down before the
+video was watched, so watching it can only confirm or refute -- not score.
+
+----------------------------------------------------------------------------
+CONTEXT (Smart Tagging, independent of our pipeline)
+  tagged attacking-phase balance   0.66 home
+  set pieces   {'Corner Kick': 2, 'Throw-in': 1, 'Goal Kick': 1}
+  goals        0
+
+----------------------------------------------------------------------------
+FRAME MIX
+  H    2581 frames   34.4%   103.2s
+  A    2728 frames   36.4%   109.1s
+  D    2191 frames   29.2%    87.6s
+  X       0 frames    0.0%     0.0s
+
+----------------------------------------------------------------------------
+THE CLAIMS, IN ORDER   (18 possessions, 6 dead stretches)
+  'why' is the pipeline's own recorded reason, at its offset in frames from the
+  boundary. touch = a detected contact; evidence = 35 frames of the other team
+  being nearer by the margin, backdated; restart = first claim after a stoppage.
+
+  #    video      match         dur  says  why / rules
+       22:23.88   14:56.5     14.4s  D     dead: lost+slow  no restart found
+  1    22:38.32   15:10.9      2.4s  A     restart
+  2    22:40.76   15:13.4      7.2s  H     evidence@-8 +snap(touch,+8)
+       22:48.00   15:20.6     25.1s  D     dead: lost+slow  no restart found
+  3    23:13.08   15:45.7      1.7s  H     restart
+  4    23:14.76   15:47.4      4.1s  A     evidence@-8 +snap(touch,+8)
+  5    23:18.84   15:51.4      8.7s  H     evidence@+4 +snap(crossing,-4)
+       23:27.52   16:00.1     15.2s  D     dead: lost+slow  no restart found
+  6    23:42.68   16:15.3     42.8s  A     restart  <-- long for one possession
+       24:25.52   16:58.1     14.7s  D     dead: slow  no restart found
+  7    24:40.20   17:12.8      1.9s  A     held
+       24:42.08   17:14.7     13.4s  D     dead: oob  restart@24:55.48
+  8    24:55.48   17:28.1     11.6s  H     restart
+  9    25:07.04   17:39.6      5.0s  A     evidence@+8 +snap(crossing,-8)
+  10   25:12.04   17:44.6     28.4s  H     evidence  <-- long for one possession
+  11   25:40.40   18:13.0     13.0s  A     evidence@+8 +snap(crossing,-8)
+  12   25:53.44   18:26.0      8.1s  H     evidence
+       26:01.52   18:34.1      4.9s  D     dead: oob  restart@26:06.40
+  13   26:06.40   18:39.0     15.0s  H     restart
+  14   26:21.36   18:54.0      5.8s  A     evidence@+8 +snap(crossing,-8)
+  15   26:27.20   18:59.8      3.7s  H     evidence@+6 +snap(crossing,-6)
+  16   26:30.92   19:03.5      7.0s  A     evidence
+  17   26:37.92   19:10.5     19.0s  H     evidence@+4 +snap(crossing,-4)
+  18   26:56.88   19:29.5     27.0s  A     evidence  <-- long for one possession
+
+----------------------------------------------------------------------------
+SHAPE
+  possessions         18   (9 home, 9 away)
+  per minute          3.6
+  duration  median 7.7s   min 1.7s   max 42.8s   p90 27.4s
+  model's home share  0.49   (tagging says 0.66)
+  dead stretches      6
+  restarts detected   2
+
+----------------------------------------------------------------------------
+TRACKING QUALITY  (why a claim might be wrong through no fault of the logic)
+  ball untracked      28.9% of frames
+  >22 players tracked 0.0% of frames   median 21
+  touches detected    114   (22.8/min)
+  contested frames    2.6%
+
+----------------------------------------------------------------------------
+THE OTHER MODELS ON THE SAME WINDOW
+  agreement is frame-level against exp04, which is the one described above.
+
+  model                   agreement  possessions
+  baseline_raw                67.7%          100
+  baseline_smooth125          67.6%           23
+  baseline_smooth25           68.2%           50
+  baseline_smooth50           69.6%           38
+  exp01                       86.6%           23
+  exp02                       93.6%           27
+  exp03                       94.2%           28
+  exp04                      100.0%           18
+
+----------------------------------------------------------------------------
+HOW TO WATCH THIS
+  Seek to the video times above in the tactical mp4; they are frame/25, the same
+  clock validation/annotate.py shows. For each numbered possession ask only:
+    1. did possession really change there, within about half a second?
+    2. is the team right?
+    3. for every 'dead' row -- was the ball actually out of play?
+  Write what you see against the row number. A pattern across several rows is
+  worth more than any single row, and is the thing to bring back.

@@ -1,0 +1,42 @@
+PUBLIC WINDOW   frames 11185-18685   video 07:27.40 - 12:27.40   match 00:00.0 - 05:00.0
+official = the organisers' published labels.  ours = exp04.
+
+official possessions 17, ours 11.  frames disagreeing 11.1% (33.4s)
+'.' = same label continuing from the row above. '≠' = the two disagree on this row.
+
+  video      match        dur  #   them  #   ours     why/rules (ours)
+  07:27.40   00:00.0     0.1s  1   A         D     ≠  dead: lost+oob+slow  restart@07:27.48
+  07:27.48   00:00.1     6.6s        .   1   A        restart
+  07:34.04   00:06.6     4.8s  2   H           .   ≠  
+  07:38.84   00:11.4     3.3s        .   2   H        evidence@+5 +snap(touch,-5)
+  07:42.12   00:14.7     2.8s  3   A           .   ≠  
+  07:44.96   00:17.6    41.6s  4   H           .      
+  08:26.60   00:59.2     0.1s  5   A           .   ≠  
+  08:26.72   00:59.3     5.3s        .   3   A        evidence@+8 +snap(crossing,-8)
+  08:32.04   01:04.6     2.0s        .   4   H     ≠  evidence@-4 +snap(touch,+4)
+  08:34.04   01:06.6     5.5s      D           .   ≠  
+  08:39.56   01:12.2    27.4s  6   H           .      
+  09:06.92   01:39.5     1.2s        .   5   A     ≠  evidence@-1 +snap(touch,+1)
+  09:08.16   01:40.8     3.2s  7   A           .      
+  09:11.40   01:44.0     0.4s  8   H           .   ≠  
+  09:11.80   01:44.4    41.9s        .   6   H        evidence@+8 +snap(crossing,-8)
+  09:53.72   02:26.3     0.1s        .   7   A     ≠  evidence@+2 +snap(crossing,-2)
+  09:53.84   02:26.4    20.0s  9   A           .      
+  10:13.84   02:46.4     0.8s  10  H           .   ≠  
+  10:14.60   02:47.2    16.0s  11  A           .      
+  10:30.64   03:03.2     1.3s  12  H           .   ≠  
+  10:31.96   03:04.6     3.4s  13  A           .      
+  10:35.36   03:08.0     0.2s        .   8   H     ≠  evidence@+8 +snap(crossing,-8)
+  10:35.56   03:08.2     5.1s      D           .   ≠  
+  10:40.64   03:13.2    15.4s        .       D        dead: slow
+  10:56.00   03:28.6     1.0s  14  A           .   ≠  
+  10:56.96   03:29.6    34.8s        .   9   A        restart
+  11:31.72   04:04.3     3.5s  15  H           .   ≠  
+  11:35.20   04:07.8     3.0s      D           .   ≠  
+  11:38.24   04:10.8    14.8s        .       D        dead: lost+oob+slow  restart@11:53.04
+  11:53.04   04:25.6     0.5s        .   10  A     ≠  restart
+  11:53.52   04:26.1     7.5s  16  A           .      
+  12:01.00   04:33.6     0.1s        .       D     ≠  dead: oob
+  12:01.08   04:33.7    13.6s      D           .      
+  12:14.68   04:47.3     0.9s        .   11  H     ≠  restart
+  12:15.56   04:48.2    11.8s  17  H           .      

@@ -39,6 +39,11 @@ calibrate.py   a blind hand annotation of the PUBLIC window vs the official labe
                human ceiling. The public annotation is never merged into val15 or the pool.
 towatch.py     the list of moments to go and watch: official possessions our labels miss, and
                the model's near-misses, with video and match-clock timestamps
+blind.py       the reverse of annotate.py: draws an unused 5-minute window at random, records
+               the draw in picks.csv, and prints every claim the model makes there BEFORE the
+               video is watched. Produces no labels and no score, so nothing can be tuned on it
+picks.csv      the windows blind.py has drawn, written at the moment of the draw
+blind*.txt     the reports, kept so a watched window can be re-read against what was claimed
 compare.csv    the last compare.py run, every number
 labels/        the hand annotation -- committed; it is the source of truth
 gt/            built from labels/ by expand.py -- gitignored
@@ -48,7 +53,23 @@ gt/            built from labels/ by expand.py -- gitignored
 python validation/expand.py                       # after editing any labels
 python validation/compare.py --bootstrap 1000     # the scoreboard to decide on
 python evaluation/run_evaluation.py --gt validation/gt/val15.csv --bootstrap 1000   # 15 min only
+python validation/blind.py --seed 3               # draw and report a fresh blind window
+python validation/blind.py --window blind2        # re-print one already drawn
 ```
+
+### Why blind windows as well as annotated ones
+
+Annotating first and scoring second has a measured failure mode here: twice a decision was tuned
+against hand labels that followed a different convention from the organisers', and twice it had to
+be reversed. It also means the labeller has settled on the answer before seeing the model's claim,
+so the only question left is who is right, never *why the model did that*.
+
+`blind.py` inverts it. The window is a seeded uniform draw over every frame not already used — not
+chosen on balance, set-piece count, or anything the pipeline computes — and the model's claims are
+written down with timestamps before anyone watches. The video then adjudicates them one by one.
+The output is a list of error *categories*, which can be fixed, rather than a disagreement rate,
+which cannot. There is no ground truth for these windows and none is produced, so a blind window
+can never be tuned on and never enters `val15.csv` or the pooled score.
 
 ## Calibration: what these labels do and do not measure
 

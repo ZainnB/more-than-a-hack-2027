@@ -1,0 +1,77 @@
+BLIND WINDOW blind1   frames 43796-51296   seed 1
+video 29:11.84 - 34:11.84     match 21:44.4 - 26:44.4     half 1
+
+Nothing below is a label. It is what exp04 claims, written down before the
+video was watched, so watching it can only confirm or refute -- not score.
+
+----------------------------------------------------------------------------
+CONTEXT (Smart Tagging, independent of our pipeline)
+  tagged attacking-phase balance   0.75 home
+  set pieces   {'Kick Off (After Goal)': 1, 'Throw-in': 1, 'Goal Kick': 1, 'Free Kick': 1}
+  goals        1
+
+----------------------------------------------------------------------------
+FRAME MIX
+  H    1853 frames   24.7%    74.1s
+  A     515 frames    6.9%    20.6s
+  D    5008 frames   66.8%   200.3s
+  X     124 frames    1.7%     5.0s
+
+----------------------------------------------------------------------------
+THE CLAIMS, IN ORDER   (5 possessions, 5 dead stretches)
+  'why' is the pipeline's own recorded reason, at its offset in frames from the
+  boundary. touch = a detected contact; evidence = 35 frames of the other team
+  being nearer by the margin, backdated; restart = first claim after a stoppage.
+
+  #    video      match         dur  says  why / rules
+  1    29:11.84   21:44.4     16.1s  H     held
+       29:27.96   22:00.6     23.6s  D     dead: lost+oob+slow  no restart found
+  2    29:51.56   22:24.2     26.6s  H     restart  <-- long for one possession
+       30:18.16   22:50.8     41.7s  D     dead: lost+slow  no restart found
+  3    30:59.88   23:32.5     31.2s  H     restart  <-- long for one possession
+       31:31.12   24:03.7     22.6s  D     dead: slow  no restart found
+       31:53.68   24:26.3      5.0s  X     abstain  <-- long abstention
+       31:58.64   24:31.2     71.2s  D     dead: lost+slow  no restart found  <-- long stoppage
+  4    33:09.88   25:42.5     20.6s  A     restart
+       33:30.48   26:03.1     41.2s  D     dead: lost+oob+slow  no restart found
+  5    34:11.68   26:44.3      0.2s  H     restart  <-- survived the merge threshold
+
+----------------------------------------------------------------------------
+SHAPE
+  possessions         5   (4 home, 1 away)
+  per minute          1.0
+  duration  median 20.6s   min 0.2s   max 31.2s   p90 29.4s
+  model's home share  0.78   (tagging says 0.75)
+  dead stretches      5
+  restarts detected   0
+
+----------------------------------------------------------------------------
+TRACKING QUALITY  (why a claim might be wrong through no fault of the logic)
+  ball untracked      61.5% of frames
+  >22 players tracked 0.8% of frames   median 21
+  touches detected    46   (9.2/min)
+  contested frames    2.6%
+
+----------------------------------------------------------------------------
+THE OTHER MODELS ON THE SAME WINDOW
+  agreement is frame-level against exp04, which is the one described above.
+
+  model                   agreement  possessions
+  baseline_raw                67.2%           69
+  baseline_smooth125          55.7%           25
+  baseline_smooth25           64.3%           32
+  baseline_smooth50           62.0%           26
+  exp01                       92.7%            7
+  exp02                       99.9%            5
+  exp03                      100.0%            5
+  exp04                      100.0%            5
+
+----------------------------------------------------------------------------
+HOW TO WATCH THIS
+  Seek to the video times above in the tactical mp4; they are frame/25, the same
+  clock validation/annotate.py shows. For each numbered possession ask only:
+    1. did possession really change there, within about half a second?
+    2. is the team right?
+    3. for every 'dead' row -- was the ball actually out of play?
+  Write what you see against the row number. A pattern across several rows is
+  worth more than any single row, and is the thing to bring back.

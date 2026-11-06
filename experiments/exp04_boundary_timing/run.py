@@ -49,13 +49,13 @@ config.K_FALLBACK_FRAMES = exp04_config.K_FALLBACK_FRAMES
 def build_labels(game=GAME, data_dir=None, mode=DEFAULT_MODE, window=None):
     features = feat4.load(game, data_dir)
     kin = feat2.kinematics(features, game)
-    dead, _parts, restarts = deadball.dead_mask(features, game, data_dir)
+    dead, parts, restarts = deadball.dead_mask(features, game, data_dir)
 
     touches, touch_team = touch_layer.detect(features, kin, extra=restarts)
     contested = touch_layer.contested(features)
     votes = exp01_team.tag_team_votes(features, game, data_dir)
 
-    codes, _why = team_layer.possession_state(
+    codes, why = team_layer.possession_state(
         features, kin, dead, touches, touch_team, contested, votes, game=game,
         use_touch=config.USE_TOUCH)
     codes = team_layer.merge_short(
@@ -72,7 +72,12 @@ def build_labels(game=GAME, data_dir=None, mode=DEFAULT_MODE, window=None):
         labels[sl] = np.where(dead[sl], "D",
                               np.where(codes[sl] == team_layer.HOME, "H",
                                        np.where(codes[sl] == team_layer.AWAY, "A", "X")))
-    return labels, {"moves": moves, "dead": dead}
+    # Everything the decision was made from, so a window can be explained frame by frame without
+    # re-running the pipeline. `why` is indexed before merge_short and snap moved anything, so a
+    # final boundary's reason is the nearest `why` mark, not necessarily one at the same frame.
+    return labels, {"moves": moves, "dead": dead, "parts": parts, "restarts": restarts,
+                    "why": why, "touches": touches, "touch_team": touch_team,
+                    "contested": contested, "features": features, "kin": kin}
 
 
 if __name__ == '__main__':

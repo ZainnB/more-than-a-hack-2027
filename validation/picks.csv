@@ -1,0 +1,6 @@
+# Blind windows drawn by blind.py. Recorded at the moment of the draw,
+# before the report was read, so a pick cannot be re-rolled after
+# seeing it. These are NOT labels -- see validation/labels/ for those.
+name,start,stop,seed
+blind1,43796,51296,1
+blind2,33597,41097,2
