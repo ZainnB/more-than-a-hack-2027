@@ -5,6 +5,58 @@ Written for: the team. Cross-experiment lessons are in [../LEARNINGS.md](../LEAR
 Everything up to the boundary refinement is exp03's, imported rather than copied, so
 `run.py --mode none` with exp03's thresholds reproduces exp03 byte for byte.
 
+## Status: match-tuned values removed
+
+Under the working policy in [../PLAN.md](../PLAN.md) §1, the public GT and our hand-annotated
+windows may *measure* the pipeline, but no value may be chosen because it scored better on them.
+Five of exp04's settings had been chosen that way. Each one now goes back to the value it had
+before it was scored, which was set for a reason that never used the labels (see `config.py`):
+
+| setting | tuned | untuned | why the untuned value |
+|---|---|---|---|
+| `MARGIN_M` | 1.25 m | 2.0 m | reach ~1 m, tackle inside 2 m |
+| `K_FALLBACK_FRAMES` | 35 | 25 | CHALLENGE.md's "keeps the ball for a few seconds", 1 s |
+| `USE_TOUCH` | off | on | the design it was built from (Link & Hoernig) |
+| `MAX_DEAD_FRAMES` | 375 | 1500 | past every non-goal stoppage |
+| Smart Tagging vote codes | 4 codes picked by GT accuracy | attacking phases + set pieces | the codes whose Team tag means "in possession" |
+| boundary snap | touch, ±8 | none | no setting of it was ever chosen without the labels |
+
+Result:
+
+| | public | win1 | win2 | win3 | pooled spellF1 | pooled macroF1 | full-match poss |
+|---|---|---|---|---|---|---|---|
+| tuned (first shipped) | **0.629** | 0.533 | 0.267 | 0.267 | 0.396 | **0.821** | 243 |
+| **untuned (current)** | 0.485 | **0.538** | **0.367** | **0.303** | **0.410** | 0.786 | 314 |
+
+One revert at a time, starting from the tuned version. **This is a diagnostic, not a menu.** Picking
+values back from this table would be the same tuning again.
+
+| revert | public | pooled spellF1 | pooled macroF1 |
+|---|---|---|---|
+| margin 1.25 → 2.0 | 0.477 | 0.359 | 0.819 |
+| k 35 → 25 | 0.555 | 0.353 | 0.819 |
+| touch path off → on | 0.533 | **0.422** | 0.817 |
+| max dead 375 → 1500 | 0.629 | 0.404 | **0.784** |
+| vote codes → a priori | 0.629 | 0.396 | 0.821 |
+| snap → none | 0.614 | 0.396 | 0.821 |
+
+What it says:
+
+- **The public window drops 0.629 → 0.485, but the other three windows all improve.** That is what
+  tuning on 17 possessions looks like once it is removed. Both moves are inside the noise bands
+  (about 0.33 at 17 possessions, about 0.1 at 60), so the honest reading is "about the same, and no
+  longer fitted to the public window", not "better" or "worse".
+- **The touch path helps on the current labels.** exp02 switched it off after measuring it against
+  the first-pass hand labels, which under-counted short possessions by 35%. That label set
+  rewarded merging, which is exactly what the switch-off did.
+- **macroF1 loses 0.035, almost all of it from the 60 s restart search.** When a quick restart is
+  missed, the search runs on and marks live play dead. That is a real failure mode to fix by
+  design (for example a restart detector that does not need a settled ball), not by shrinking the
+  cap back to the value that scored best.
+
+The rest of this README describes exp04 as first shipped, with the tuned values. It is kept as the
+record of what was tried.
+
 ## Why it was attempted
 
 exp03's errors looked like bad placement rather than invention. Of its spurious possessions,

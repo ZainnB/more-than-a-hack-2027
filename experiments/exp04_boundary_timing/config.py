@@ -1,40 +1,65 @@
-"""exp04's overrides. Everything not listed here is inherited from exp02's config.
+"""exp04's overrides: the pipeline with every match-tuned value removed.
 
-Two changes from exp03, both from the sweeps in README.md.
+Everything not listed here is inherited from exp01's and exp02's configs. Those two files are left
+as they were, as the record of what those experiments did; exp04 overrides them at import (see
+run.py) so it can run without any value that was chosen by scoring against this match.
+
+The rule, from experiments/PLAN.md section 1: the public GT and our hand-annotated windows may
+measure the pipeline, but no value, threshold or on/off switch may be chosen because it scored
+better on them. Each value below was chosen that way, and each one goes back to the value it had
+*before* it was scored, which was itself set for a reason that never used the labels.
+
+Kept as inherited, because they never came from a score: the published touch and zone values
+(Link & Hoernig, Vidal-Codina), the Savitzky-Golay settings, K_CONFIRM, MIN_POSSESSION_S, the
+restart speeds (read off the tracking at one goal kick, not scored), MIN_DEAD_FRAMES, the
+slow-pitch window and duration, the keeper classification (an automatic check on the provided
+tracking, which PLAN.md section 1 allows), and pitch geometry.
+
+One judgement call is flagged rather than reverted: exp01's SLOW_PITCH_SPEED = 1.3 m/s. It was
+re-checked against the public dead stretches after a parsing bug, but the value is human walking
+pace, which is where it would be set from first principles too. There is no earlier, unscored
+value to go back to.
 """
 
-# -- the evidence threshold, and why it moved -----------------------------------------------------
-# exp03 ran at margin 1.5 m / 25 frames. Those were chosen separately, at different times, each
-# with the other held fixed -- and they interact, which neither sweep could see.
-#
-# A looser margin admits weaker evidence, so it needs more of that evidence to be trusted. Swept
-# jointly against both labellings, k is the parameter that matters and the margin is nearly flat
-# across 0.75-1.25 m once k is right:
-#
-#     k      public spellF1   pooled spellF1   full-match possessions
-#     25     0.555            0.347            287
-#     30     0.621            0.393            258
-#     35     0.629            0.396            247    <- chosen
-#     40     0.629            0.389            232
-#     50     0.600            0.389            208
-#     60     0.462            0.343            199
-#
-# 30 to 50 is a broad plateau and both label sets agree on it, which is the reason to trust it;
-# the single best cell is not. 1.25 m is the top of the margin's flat range, so it is the most
-# conservative of the tied settings.
-MARGIN_M = 1.25
-K_FALLBACK_FRAMES = 35
+# -- exp02 overrides -------------------------------------------------------------------------------
+# Possession evidence margin. 1.5 m (exp02) and 1.25 m (exp04 as first shipped) were both picked by
+# sweeping against the official public labels. 2.0 m is the value it had before any sweep, from
+# physics alone: a player's reach is about a metre and a tackle happens inside two, so below 2 m
+# "who is nearest" is not evidence of who is in control.
+MARGIN_M = 2.0
+
+# Frames of sustained evidence before a change. 35 was picked from the same joint sweep. 25 frames
+# (1 s) is CHALLENGE.md's own proxy for controlled possession, "a player keeps the ball for a few
+# seconds", at its conservative end. It is the value exp01 started from, before anything was
+# scored.
+K_FALLBACK_FRAMES = 25
+
+# The touch path. exp02 switched it off because it scored worse on the hand-annotated windows,
+# which is selecting a component by its score on the match. Restored to the design it was built
+# from: Link & Hoernig report that requiring a change of possession to coincide with a detected
+# kick raises precision from 0.68 to 0.86, and every threshold in it is published.
+USE_TOUCH = True
+
+# -- exp01 overrides -------------------------------------------------------------------------------
+# How far past the ball leaving the pitch to search for the restart. 375 was picked from a sweep
+# against both labellings ("the last value that costs the official labels nothing"). 1500 frames
+# (60 s) is the original value: past every non-goal stoppage.
+MAX_DEAD_FRAMES = 1500
+
+# Smart Tagging codes allowed to vote on the team in possession, used only where the ball is not
+# tracked. exp01's list was selected by measuring each code's accuracy against the public GT,
+# which is feature selection on the GT. Replaced by the a priori list: the codes whose Team tag
+# names the team *in possession* by definition -- the attacking phases, and set pieces, whose Team
+# is the side taking them. The DEFENDING IN * codes name the other team and are excluded for that
+# reason, not because of a score.
+TEAM_VOTE_CODES = ("BUILD UP", "PROGRESSION", "CREATING CHANCES", "ATTACKING TRANSITION",
+                   "LONG BALL", "SET PIECES")
 
 # -- boundary refinement ---------------------------------------------------------------------------
-# Snap each live possession boundary onto the nearest touch by the incoming team. See refine.py.
-#
-# This barely earns its place: +0.013 on the official window, flat pooled. It is kept because the
-# gain is consistent in sign across every k in the plateau and it cannot change the possession
-# count by construction, so it carries no risk of the kind the threshold does. It is not what
-# made exp04 better -- the sweep above is.
-#
-# The search radius is the load-bearing part. At +/-8 frames it helps slightly; at +/-50 it
-# clearly hurts (pooled 0.353 -> 0.340), because a boundary allowed to travel two seconds finds
-# the wrong touch.
-SNAP_MODE = "touch"
+# Snap each possession boundary onto a nearby touch. See refine.py. Off: the refinement has no
+# setting that was chosen without the match labels. It was kept only for a +0.013 gain on the
+# official window, its +/-8 frame radius was picked by score, and refine.py's own default of 50
+# frames was sized to the boundary spread measured against the hand labels. With tuning removed
+# it has nothing to stand on, so exp04 runs it as "none".
+SNAP_MODE = "none"
 SNAP_WINDOW = 8

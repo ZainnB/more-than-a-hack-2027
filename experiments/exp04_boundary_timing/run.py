@@ -32,31 +32,52 @@ except ImportError:
 from exp03_keeper_fix import features as feat4  # noqa: E402
 from exp02_touch_gated import config, features as feat2, team as team_layer, \
     touch as touch_layer  # noqa: E402
-from exp01_geometry_hysteresis import deadball, team as exp01_team  # noqa: E402
+from exp01_geometry_hysteresis import config as exp01_config, deadball, \
+    team as exp01_team  # noqa: E402
 from baseline import write_submission  # noqa: E402
 from games import GAME, GAMES, half_video_blocks  # noqa: E402
 
 DEFAULT_OUT = os.path.join(ROOT, "evaluation", "results", "exp04.csv")
 DEFAULT_MODE = exp04_config.SNAP_MODE
 
-# exp04 inherits exp02's possession layer and overrides two of its thresholds. Applied at import
-# so every entry point -- run.py, refine.py --report, an interactive session -- sees the same
-# configuration, rather than only the command line.
+# exp04 inherits exp01's and exp02's layers and overrides every value that had been chosen by
+# scoring against the match (see config.py). Applied at import so every entry point -- run.py,
+# refine.py --report, validation/blind.py, an interactive session -- sees the same configuration,
+# rather than only the command line.
 config.MARGIN_M = exp04_config.MARGIN_M
 config.K_FALLBACK_FRAMES = exp04_config.K_FALLBACK_FRAMES
+config.USE_TOUCH = exp04_config.USE_TOUCH
+exp01_config.MAX_DEAD_FRAMES = exp04_config.MAX_DEAD_FRAMES
+exp01_config.TEAM_VOTE_CODES = exp04_config.TEAM_VOTE_CODES
 
 
 def build_labels(game=GAME, data_dir=None, mode=DEFAULT_MODE, window=None):
     features = feat4.load(game, data_dir)
+    votes = exp01_team.tag_team_votes(features, game, data_dir)
+    return labels_from_features(features, half_video_blocks(game), game, GAMES[game]["n_video_frames"],
+                                votes=votes, mode=mode, window=window, data_dir=data_dir)
+
+
+def labels_from_features(features, blocks, game, n_frames, votes=None, mode=DEFAULT_MODE,
+                         window=None, data_dir=None, dead_hook=None):
+    """The whole pipeline on a feature dict, whatever produced it.
+
+    `blocks` is [(half, first_frame, last_frame)]; frames outside them are written X. `game` only
+    supplies the pitch size and frame rate (GAMES[game]), so the same code runs on a registered
+    external dataset. `votes` is the Smart Tagging team vote, or None where there is none.
+    `dead_hook(dead, restarts, features)` may return an edited (dead, restarts), for evidence
+    the tracking does not carry, such as the referee's whistle (exp05).
+    """
     kin = feat2.kinematics(features, game)
     dead, parts, restarts = deadball.dead_mask(features, game, data_dir)
+    if dead_hook is not None:
+        dead, restarts = dead_hook(dead, restarts, features)
 
     touches, touch_team = touch_layer.detect(features, kin, extra=restarts)
     contested = touch_layer.contested(features)
-    votes = exp01_team.tag_team_votes(features, game, data_dir)
 
     codes, why = team_layer.possession_state(
-        features, kin, dead, touches, touch_team, contested, votes, game=game,
+        features, kin, dead, touches, touch_team, contested, votes, blocks=blocks, game=game,
         use_touch=config.USE_TOUCH)
     codes = team_layer.merge_short(
         codes, dead, int(round(config.MIN_POSSESSION_S * GAMES[game]["fps"])))
@@ -66,8 +87,8 @@ def build_labels(game=GAME, data_dir=None, mode=DEFAULT_MODE, window=None):
                                mode=mode,
                                window=exp04_config.SNAP_WINDOW if window is None else window)
 
-    labels = np.full(GAMES[game]["n_video_frames"], "X", dtype="<U1")
-    for _half, first, last in half_video_blocks(game):
+    labels = np.full(n_frames, "X", dtype="<U1")
+    for _half, first, last in blocks:
         sl = slice(first, last + 1)
         labels[sl] = np.where(dead[sl], "D",
                               np.where(codes[sl] == team_layer.HOME, "H",

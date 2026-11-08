@@ -110,3 +110,52 @@ continues after a foul, and that is rare. Revisit only if 1 and 2 are both exhau
 - **Full-match sanity:** how many whistles are detected (a match has roughly 80–120 stoppages that
   start with a whistle, counting fouls, offsides and the ends of halves), and the fraction of
   existing `slow` stoppages with a whistle in the 5 s before them.
+
+---
+
+## Built (Nov 8)
+
+`whistle.py` finds whistles in the tactical audio; `stoppage.py` is a `dead_hook` for exp04's
+pipeline; `run.py` runs exp06's tuned pipeline with it -> `exp05.csv`. PyAV only, no opencv in the
+same process.
+
+### The detector, and how it got there
+
+Go/no-go passed by eye: a referee's whistle is a stack of flat parallel lines near 4 kHz. The
+kickoff and two whistle-only stoppages have one; the corner and ball-out do not, since referees
+do not whistle those. The official dead-ball start lands on the whistle.
+
+| version | whistles | what was wrong |
+|---|---|---|
+| strongest bin in 2-6 kHz | 5,957 | a continuous tonal background at 2-2.7 kHz out-shouts the whistle |
+| 3-6 kHz, onset, max 3 s | 246 | a steady 3.3 kHz tone in the band; real whistles merged into it |
+| each bin against its own 5 s background | 2,247 | every crowd chirp is now new tonal energy |
+| plus: two parallel peaks 150-700 Hz apart (the pea's sidebands) | 531 | crowd choruses and short chirps remain |
+| plus: blast at least 0.5 s, no sustained tone in the 4 s before it | **137** (119 in play) | — |
+
+Final check on the six known moments of the public window: all four referee blasts found
+(kickoff −1.7 s, 08:34 −0.7 s, 10:35 −0.9 s, second-half kickoff −1.5 s), and silent at the
+corner and the ball out. **The last two rules came from inspecting the public window, so it is a
+biased check of this component.** The hand-annotated windows are not.
+
+### Integration and result
+
+- **Anchor:** a stoppage starting within 5 s after a whistle starts at the whistle.
+- **Add:** a whistle in live play followed by the ball settling or vanishing **and** the players
+  slowing by 10% becomes a stoppage, ending at the next settled-ball strike (within 30 s).
+
+| | public (biased) | win1 | win2 | win3 | hand windows only | pooled macroF1 |
+|---|---|---|---|---|---|---|
+| exp06 | 0.507 | 0.571 | 0.471 | 0.327 | 0.451 | 0.818 |
+| exp05 | 0.463 | 0.571 | 0.500 | 0.350 | **0.470** | 0.813 |
+
+- +0.019 spellF1 on the unbiased windows, inside the noise band.
+- On the public window the 08:34 stoppage is now right (08:33.28-08:39.16 against an official
+  08:34.04-08:39.56), but a crowd chorus at 11:23 still slipped through as a false stoppage.
+- **10:35 was missed by design.** The players slowed sharply after the blast (2.84 to 1.67 m/s),
+  but the ATD ball is so smoothed that it never "settles", and the rule needed both. Same
+  smoothed-ball problem as before, in a new place.
+
+Not switched in for the submission on this evidence. Next: corroborate by the players' slowdown
+alone, or fold the whistle into the tracking-only dead-ball classifier (TRACKING_PLAN step 2a)
+rather than a hand-written rule.
