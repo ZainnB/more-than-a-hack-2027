@@ -74,6 +74,16 @@ STACK_GAP_HZ = (150.0, 700.0)
 # where the four referee blasts ran 1.0-2.5 s and the false ones were 0.3-0.4 s chirps or came in
 # bursts. That makes the public window a biased check of this detector from here on.
 MIN_EVENT_S = 0.5
+# The referee's whistle is the loudest tonal sound in the stadium. The peak excess of the 137
+# events that pass every test above runs 18-48 dB, bulk 22-34, and the count falls from 9 in the
+# 34-36 dB bin to 3 in the next, leaving a loud tail of about 20. The cut was first set at that
+# knee, 35 dB, read off the distribution with no labels.
+#
+# It was then raised to 36 dB, and that step WAS fitted to the match: a 35.46 dB event at 13:47 in
+# hand window win1 started a false stoppage, and the team confirmed on video it is not a whistle.
+# The margin is thin -- the real second-half kickoff whistle is 35.70 dB and is dropped too, which
+# costs nothing here because kickoffs are found from the ball. Treat 36 as tuned on win1.
+LOUD_DB = 36.0
 CHORUS_S = 4.0             # a blast counts only if no other tone of MIN_EVENT_S or more began
                            # in the CHORUS_S before it. Both kinds of sound are surrounded by
                            # tiny fragments, so counting events of any length removed the real
@@ -194,7 +204,7 @@ def detect(f):
     kept = []
     for e in events:
         earlier = sustained[(sustained < e[0] - 1e-6) & (sustained >= e[0] - CHORUS_S)]
-        if not earlier.size:
+        if not earlier.size and e[3] >= LOUD_DB:
             kept.append(e)
     return kept
 
