@@ -8,7 +8,7 @@ On degraded IDSSE, fixing team identity within 1.5 m of the ball is worth +0.057
 much as fixing it everywhere, because only the nearest players decide the team call. The ATD's
 team labels are about 93% right, and the video shows the kits plainly: Barcelona dark and
 saturated (blue and garnet), Athletic white or light lilac, Athletic's keeper green, the referee
-yellow. This extracts what decide.py needs to check the label of each player near the ball
+yellow. This extracts what decide.py (since removed; see README.md) needed to check each near-ball label
 against the shirts in the same frame.
 
 What is measured

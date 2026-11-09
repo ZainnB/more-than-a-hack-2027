@@ -1,7 +1,7 @@
 """How good are our stoppages? Frame-level D scores, and start / end timing per stoppage.
 
-    python experiments/exp08_deadball_clf/deadreport.py exp06 exp08b
-    python experiments/exp08_deadball_clf/deadreport.py exp06 exp08b --detail public
+    python experiments/exp08_deadball_clf/deadreport.py exp06 exp08
+    python experiments/exp08_deadball_clf/deadreport.py exp06 exp08 --detail public
 
 For every true stoppage in a window: was it found (any overlap with a predicted one), and if so
 how far the predicted start and end are from the true ones, in seconds (negative = early). A

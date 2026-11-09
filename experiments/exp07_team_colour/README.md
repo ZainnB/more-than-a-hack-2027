@@ -16,8 +16,12 @@ in the frame.
 |---|---|
 | `players.py` | every ATD slot's position on every frame, cached |
 | `colour.py` | one pass over the video (20 min): for every tracked player on the 61,555 frames where someone is within 3 m of the ball, a torso crop sized from the local pixels-per-metre, grass masked, described by chroma only (saturation, Lab a/b, share of white). Brightness is left out because half the pitch is in shadow |
-| `decide.py` | same-frame colour consensus, below |
-| `run.py` | exp06's pipeline and tuned values on features with the corrected labels -> `exp07.csv` |
+| `decide.py` | same-frame colour consensus, below (removed 2026-11-09; in git at commit bc6de5d) |
+| `run.py` | exp06's pipeline on features with the corrected labels (removed with it) |
+
+`players.py` stays: exp08's dead-ball classifier reads player positions from it. `decide.py` and
+`run.py` were removed in the clean-up after exp08 because the step changed no score; the finding
+below is what it is kept for.
 
 `decide.py`, per frame:
 - The other players form two colour groups (a 2-group split of that frame only). Each group is

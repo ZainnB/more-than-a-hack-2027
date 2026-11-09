@@ -6,6 +6,11 @@ Written for: the team. Builds on [PLAN.md](PLAN.md) (rules, working policy) and 
 
 Deadline **November 17, 2026**. Steps are ordered by measured value per day of work.
 
+**Status (2026-11-09):** step 0 done. Step 1 (team identity) built as exp07: works, changes nothing,
+and showed the real near-ball label error is about 1%, not 7%. Step 2a (dead-ball classifier) and 2b
+(whistle) built as exp08, which is the current best submission. Section 1's "+0.057 for team
+identity" figure assumed the 7% flip rate and is overstated; see LEARNINGS.md 0d.
+
 ---
 
 ## 1. Why tracking, and how much it can be worth

@@ -1,6 +1,10 @@
-# Experiment 5 — the referee's whistle (plan, not yet built)
+# The referee's whistle — history (formerly experiment 5)
 
-Written for: the team. Cross-experiment lessons are in [../LEARNINGS.md](../LEARNINGS.md).
+Written for: the team. This was exp05's README. The detector, `whistle.py`, now lives in this folder
+and is used by exp08 (see [README.md](README.md)); exp05's own integration (`stoppage.py`, `run.py`,
+`exp05.csv`) was removed when exp08's whistle-lowered threshold superseded it, and is in git history
+at commit bc6de5d. The detector table below stops at 137 whistles; exp08 then added the loudness cut
+(35 dB, then 36 dB) that leaves 18. Kept for the record of what was tried and why.
 
 ## The problem, as the video showed it
 

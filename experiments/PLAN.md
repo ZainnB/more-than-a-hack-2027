@@ -39,6 +39,11 @@ against the primary text (licence file, paper, dataset card). Do not rely on it 
   used to *measure* the pipeline and to find its failure modes. No parameter value, threshold or on/off
   switch is ever chosen because it scored better on them. If a failure found this way motivates a change,
   the new value must come from a priori reasoning or external data, never from a sweep on the match.
+- **Change only on external evidence beyond noise.** A value, threshold or component changes only if
+  IDSSE (held-out matches, several noise seeds) shows an improvement larger than seed-to-seed noise.
+  When IDSSE cannot tell two options apart, the incumbent stays. Written down on 2026-11-09, after
+  exp08, where this rule was first applied after the match had already been scored (see
+  LEARNINGS.md 0f); from then on it is applied before.
 - **Hand labels.** Our hand annotation of the provided match is an internal test of our pipeline only. It is
   never training or tuning data and never part of the submission.
 - **Provided tracking statistics** (for example the ball-missing rate or team-attribution noise) are input

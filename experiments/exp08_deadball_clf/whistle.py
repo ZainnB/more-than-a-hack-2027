@@ -1,6 +1,6 @@
 """Find the referee's whistle in the tactical video's own audio track.
 
-    python experiments/exp05_whistle/whistle.py            # decode, detect, cache, summarise
+    python experiments/exp08_deadball_clf/whistle.py       # decode, detect, cache, summarise
 
 Why the tactical audio
 ----------------------
