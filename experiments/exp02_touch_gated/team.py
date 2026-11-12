@@ -136,7 +136,7 @@ def possession_state(features, kinematics, dead, touches, touch_team, contested,
                 if dead_ahead.size:
                     stop = frame + 1 + int(dead_ahead[0])
                 new = touch_team[frame]
-                if _confirmed(nearest, has_answer, frame + 1, stop, new):
+                if not config.TOUCH_CONFIRM or _confirmed(nearest, has_answer, frame + 1, stop, new):
                     current = new
                     why[frame] = 1
                     candidate, streak = NOBODY, 0

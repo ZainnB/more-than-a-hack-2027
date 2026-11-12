@@ -188,10 +188,24 @@ def reason(detail, frame, radius=40):
 
 
 def dead_reason(detail, a, b):
-    """Which dead-ball rules fired over a stretch, and whether a restart was detected."""
+    """What produced a dead stretch, and whether a restart was detected.
+
+    `parts` holds the geometry rules' masks. When a dead_hook replaced the mask (exp08's
+    classifier), those masks no longer describe the stretch, so they are reported as what the
+    rules *would* have said, and the whistle that lowered the threshold is named instead.
+    """
     fired = [name for name, mask in detail["parts"].items() if mask[a:b].any()]
     restart = [r for r in detail["restarts"] if a - 50 <= r < b + 50]
-    return "+".join(sorted(fired)) or "none", restart
+    if not detail.get("hooked"):
+        return "+".join(sorted(fired)) or "none", restart
+    note = "clf"
+    whistles = detail.get("whistles", [])
+    near = [w for w in whistles if a - 250 <= w <= b]
+    if near:
+        note += "+whistle@{:+.1f}s".format((near[0] - a) / 25.0)
+    if fired:
+        note += " (rules: {})".format("+".join(sorted(fired)))
+    return note, restart
 
 
 def quality(detail, start, stop):
@@ -405,6 +419,48 @@ def side_by_side(start, stop, detail, labels, truth, truth_name="official"):
     return "\n".join(header + lines)
 
 
+def gap_summary(start, stop, labels, truth):
+    """Where this window's disagreement sits: frames by kind of error, and spells missed."""
+    fps = GAMES[GAME]["fps"]
+    ours = pm.label_codes(labels)[start:stop]
+    theirs = truth[start:stop]
+    live = {pm.H, pm.A}
+    kinds = [
+        ("we say dead, they say live", np.isin(theirs, list(live)) & (ours == pm.D)),
+        ("we say live, they say dead", (theirs == pm.D) & np.isin(ours, list(live))),
+        ("both live, wrong team", np.isin(theirs, list(live)) & np.isin(ours, list(live))
+         & (ours != theirs)),
+        ("we abstain", ours == pm.X),
+    ]
+    total = stop - start
+    lines = ["  WHERE THE GAP IS"]
+    wrong = sum(int(m.sum()) for _n, m in kinds)
+    lines.append("    frames agreeing      {:>6.1f}%".format(100.0 * (total - wrong) / total))
+    for name, mask in kinds:
+        lines.append("    {:<26} {:>5.1f}%  {:>6.1f}s".format(
+            name, 100.0 * mask.sum() / total, mask.sum() / float(fps)))
+
+    runs = [(start, stop)]
+    full_truth = np.full(len(truth), pm.X, dtype=np.int8)
+    full_truth[start:stop] = theirs
+    full_ours = np.full(len(truth), pm.X, dtype=np.int8)
+    full_ours[start:stop] = ours
+    gt_spells = pm.possession_spells(full_truth, runs)
+    pred_spells = pm.possession_spells(full_ours, runs)
+    overlaps = pm.spell_overlaps(gt_spells, pred_spells)
+    matched = pm.matched_gt_flags(overlaps, len(gt_spells), 0.5)
+    lines.append("    possessions: theirs {}, ours {}; matched at IoU 0.5: {}".format(
+        len(gt_spells), len(pred_spells), int(np.sum(matched))))
+    missed = [(a, b, pm.LABELS[k]) for (a, b, k), hit in zip(gt_spells, matched) if not hit]
+    if missed:
+        short = sum(1 for a, b, _k in missed if (b - a) / fps <= 2.0)
+        lines.append("    unmatched possessions of theirs: {} ({} are 2 s or shorter)".format(
+            len(missed), short))
+        lines.append("      " + "  ".join("{} {:.1f}s {}".format(video_time(a), (b - a) / fps, k)
+                                          for a, b, k in missed[:12]))
+    return "\n".join(lines)
+
+
 def _k_frames():
     from exp02_touch_gated import config as config2
     return config2.K_FALLBACK_FRAMES
@@ -415,22 +471,39 @@ if __name__ == '__main__':
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--name", help="name for a new pick (default: the next free winN)")
     parser.add_argument("--window", help="re-print a window already in picks.csv")
-    parser.add_argument("--public", action="store_true",
-                        help="the public window, official labels and ours side by side")
+    parser.add_argument("--windows", action="store_true",
+                        help="every window, labels and exp08 side by side, with a gap summary")
     parser.add_argument("--out", help="write to this file as well as printing")
     args = parser.parse_args()
 
-    if args.public:
+    if args.windows:
         import compare
-        from exp04_boundary_timing import run as run04
-        labels, detail = run04.build_labels()
-        start, stop = win.PUBLIC_WINDOW
-        truth = pm.label_codes(pm.read_label_csv(compare.PUBLIC_GT))
-        text = "PUBLIC WINDOW   frames {}-{}   video {} - {}   match {} - {}\n".format(
-            start, stop, video_time(start), video_time(stop),
-            match_time(start), match_time(stop))
-        text += "official = the organisers' published labels.  ours = exp04.\n\n"
-        text += side_by_side(start, stop, detail, labels, truth)
+        sys.path.insert(0, os.path.join(EXPERIMENTS, "exp08_deadball_clf"))
+        from exp08_deadball_clf import run as run08
+        import whistle as whistle_mod
+
+        labels, detail = run08.build_labels()
+        detail["hooked"] = True
+        detail["whistles"] = [int(e[0] * 25) for e in whistle_mod.load()["events"]]
+        truths = compare.ground_truths()
+        chunks = ["POSSESSION SIDE BY SIDE -- every window, exp08 against the labels",
+                  "",
+                  "public = the organisers' published labels; win1-3 = our hand annotation.",
+                  "ours = exp08 (exp06 possession layer, IDSSE dead-ball classifier, whistle).",
+                  "Dead rows name what decided them: clf, the whistle that lowered its threshold,",
+                  "and in brackets what the old geometry rules would have said.", ""]
+        for name in ("public", "win1", "win2", "win3"):
+            start, stop = win.frames(name)
+            chunks.append("=" * 100)
+            chunks.append("{}   frames {}-{}   video {} - {}   match {} - {}".format(
+                name.upper(), start, stop, video_time(start), video_time(stop),
+                match_time(start), match_time(stop)))
+            chunks.append("")
+            chunks.append(side_by_side(start, stop, detail, labels, truths[name], name))
+            chunks.append("")
+            chunks.append(gap_summary(start, stop, labels, truths[name]))
+            chunks.append("")
+        text = "\n".join(chunks)
         print(text)
         if args.out:
             with open(args.out, "w") as handle:

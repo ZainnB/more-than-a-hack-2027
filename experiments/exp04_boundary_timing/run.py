@@ -59,7 +59,7 @@ def build_labels(game=GAME, data_dir=None, mode=DEFAULT_MODE, window=None):
 
 
 def labels_from_features(features, blocks, game, n_frames, votes=None, mode=DEFAULT_MODE,
-                         window=None, data_dir=None, dead_hook=None):
+                         window=None, data_dir=None, dead_hook=None, touch_hook=None):
     """The whole pipeline on a feature dict, whatever produced it.
 
     `blocks` is [(half, first_frame, last_frame)]; frames outside them are written X. `game` only
@@ -67,14 +67,19 @@ def labels_from_features(features, blocks, game, n_frames, votes=None, mode=DEFA
     external dataset. `votes` is the Smart Tagging team vote, or None where there is none.
     `dead_hook(dead, restarts, features)` may return an edited (dead, restarts), for evidence
     the tracking does not carry, such as the referee's whistle (exp05).
+    `touch_hook(features, kin, dead, restarts)` may return (touches, touch_team, contested) in
+    place of exp02's detector, for a learned touch model (exp09).
     """
     kin = feat2.kinematics(features, game)
     dead, parts, restarts = deadball.dead_mask(features, game, data_dir)
     if dead_hook is not None:
         dead, restarts = dead_hook(dead, restarts, features)
 
-    touches, touch_team = touch_layer.detect(features, kin, extra=restarts)
-    contested = touch_layer.contested(features)
+    if touch_hook is not None:
+        touches, touch_team, contested = touch_hook(features, kin, dead, restarts)
+    else:
+        touches, touch_team = touch_layer.detect(features, kin, extra=restarts)
+        contested = touch_layer.contested(features)
 
     codes, why = team_layer.possession_state(
         features, kin, dead, touches, touch_team, contested, votes, blocks=blocks, game=game,

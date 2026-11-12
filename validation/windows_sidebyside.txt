@@ -1,0 +1,252 @@
+POSSESSION SIDE BY SIDE -- every window, exp08 against the labels
+
+public = the organisers' published labels; win1-3 = our hand annotation.
+ours = exp08 (exp06 possession layer, IDSSE dead-ball classifier, whistle).
+Dead rows name what decided them: clf, the whistle that lowered its threshold,
+and in brackets what the old geometry rules would have said.
+
+====================================================================================================
+PUBLIC   frames 11185-18685   video 07:27.40 - 12:27.40   match 00:00.0 - 05:00.0
+
+public possessions 17, ours 17.  frames disagreeing 14.1% (42.3s)
+'.' = same label continuing from the row above. '≠' = the two disagree on this row.
+
+  video      match        dur  #   them  #   ours     why/rules (ours)
+  07:27.40   00:00.0     6.6s  1   A     1   A        held
+  07:34.04   00:06.6     5.8s  2   H           .   ≠  
+  07:39.88   00:12.5     2.2s        .   2   H        touch
+  07:42.12   00:14.7     2.8s  3   A           .   ≠  
+  07:44.96   00:17.6    32.4s  4   H           .      
+  08:17.36   00:50.0     1.9s        .   3   A     ≠  touch
+  08:19.28   00:51.9     6.6s        .   4   H        touch
+  08:25.88   00:58.5     0.7s        .   5   A     ≠  touch
+  08:26.60   00:59.2     5.4s  5   A           .      
+  08:32.04   01:04.6     1.2s        .   6   H     ≠  touch
+  08:33.28   01:05.9     0.8s        .       D     ≠  dead: clf+whistle@+0.0s
+  08:34.04   01:06.6     4.8s      D           .      
+  08:38.84   01:11.4     0.3s        .       X     ≠  
+  08:39.16   01:11.8     0.4s        .   7   H     ≠  restart
+  08:39.56   01:12.2    27.4s  6   H           .      
+  09:06.92   01:39.5     1.2s        .   8   A     ≠  touch
+  09:08.16   01:40.8     3.2s  7   A           .      
+  09:11.40   01:44.0     1.6s  8   H           .   ≠  
+  09:13.00   01:45.6    16.6s        .   9   H        evidence
+  09:29.56   02:02.2     1.5s        .   10  A     ≠  evidence
+  09:31.08   02:03.7    22.8s        .   11  H        evidence
+  09:53.84   02:26.4     1.3s  9   A           .   ≠  
+  09:55.12   02:27.7    18.7s        .   12  A        touch
+  10:13.84   02:46.4     0.8s  10  H           .   ≠  
+  10:14.60   02:47.2    16.0s  11  A           .      
+  10:30.64   03:03.2     1.3s  12  H           .   ≠  
+  10:31.96   03:04.6     2.7s  13  A           .      
+  10:34.64   03:07.2     0.9s        .       D     ≠  dead: clf+whistle@+0.0s
+  10:35.56   03:08.2    13.8s      D           .      
+  10:49.36   03:22.0     3.1s        .   13  H     ≠  restart
+  10:52.48   03:25.1     3.5s        .   14  A     ≠  touch
+  10:56.00   03:28.6    35.7s  14  A           .      
+  11:31.72   04:04.3     1.4s  15  H           .   ≠  
+  11:33.12   04:05.7     2.1s        .   15  H        evidence
+  11:35.20   04:07.8     2.8s      D           .   ≠  
+  11:38.04   04:10.6    14.5s        .       D        dead: clf (rules: lost+oob+slow)  restart@11:52.56
+  11:52.56   04:25.2     1.0s        .   16  A     ≠  held
+  11:53.52   04:26.1     7.6s  16  A           .      
+  12:01.08   04:33.7     0.8s      D           .   ≠  
+  12:01.84   04:34.4     6.7s        .       D        dead: clf (rules: oob)  restart@12:08.56
+  12:08.56   04:41.2     7.0s        .   17  H     ≠  restart
+  12:15.56   04:48.2    11.8s  17  H           .      
+
+  WHERE THE GAP IS
+    frames agreeing        85.9%
+    we say dead, they say live   0.6%     1.7s
+    we say live, they say dead   6.2%    18.6s
+    both live, wrong team        7.2%    21.7s
+    we abstain                   0.1%     0.3s
+    possessions: theirs 17, ours 17; matched at IoU 0.5: 9
+    unmatched possessions of theirs: 8 (2 are 2 s or shorter)
+      07:34.04 8.1s H  07:42.12 2.8s A  09:53.84 20.0s A  10:13.84 0.8s H  10:14.60 16.0s A  10:30.64 1.3s H  10:31.96 3.6s A  11:31.72 3.5s H
+
+====================================================================================================
+WIN1   frames 18685-26185   video 12:27.40 - 17:27.40   match 05:00.0 - 10:00.0
+
+win1 possessions 13, ours 14.  frames disagreeing 10.5% (31.4s)
+'.' = same label continuing from the row above. '≠' = the two disagree on this row.
+
+  video      match        dur  #   them  #   ours     why/rules (ours)
+  12:27.40   05:00.0    17.8s  1   H     1   H        held
+  12:45.20   05:17.8    11.3s        .       D     ≠  dead: clf (rules: slow)
+  12:56.48   05:29.1    10.0s      D           .      
+  13:06.52   05:39.1     1.7s        .       X     ≠  
+  13:08.24   05:40.8     2.6s  2   A           .   ≠  
+  13:10.88   05:43.5     2.1s        .   2   H     ≠  restart
+  13:12.96   05:45.6     7.5s  3   H           .      
+  13:20.44   05:53.0     0.4s      D           .   ≠  
+  13:20.88   05:53.5     4.2s        .       D        dead: clf (rules: oob)  restart@13:25.08
+  13:25.08   05:57.7     0.7s        .   3   H     ≠  restart
+  13:25.76   05:58.4    32.6s  4   H           .      
+  13:58.32   06:30.9     2.6s        .   4   A     ≠  touch
+  14:00.88   06:33.5    23.6s        .   5   H        touch
+  14:24.44   06:57.0     0.1s      D           .   ≠  
+  14:24.52   06:57.1     5.1s        .       D        dead: clf (rules: oob)  restart@14:29.64
+  14:29.64   07:02.2     0.1s        .   6   H     ≠  restart
+  14:29.76   07:02.4    12.0s  5   H           .      
+  14:41.72   07:14.3     1.4s  6   A           .   ≠  
+  14:43.08   07:15.7    23.2s  7   H           .      
+  15:06.32   07:38.9     0.8s        .   7   A     ≠  touch
+  15:07.16   07:39.8    21.3s  8   A           .      
+  15:28.44   08:01.0     0.2s        .   8   H     ≠  touch
+  15:28.64   08:01.2     2.0s  9   H           .      
+  15:30.60   08:03.2     1.4s  10  A           .   ≠  
+  15:32.04   08:04.6    21.2s        .   9   A        touch
+  15:53.20   08:25.8     0.6s        .       D     ≠  dead: clf
+  15:53.84   08:26.4    10.6s      D           .      
+  16:04.40   08:37.0     0.0s        .   10  H     ≠  restart
+  16:04.44   08:37.0    14.0s  11  H           .      
+  16:18.44   08:51.0     1.9s        .   11  A     ≠  touch
+  16:20.36   08:53.0    28.0s        .   12  H        touch
+  16:48.40   09:21.0     1.0s        .   13  A     ≠  touch
+  16:49.44   09:22.0     5.9s  12  A           .      
+  16:55.32   09:27.9     1.2s        .       D     ≠  dead: clf (rules: oob)
+  16:56.48   09:29.1     6.5s      D           .      
+  17:02.96   09:35.6     1.1s  13  H           .   ≠  
+  17:04.08   09:36.7    23.3s        .   14  H        restart
+
+  WHERE THE GAP IS
+    frames agreeing        89.5%
+    we say dead, they say live   4.7%    14.2s
+    we say live, they say dead   0.5%     1.4s
+    both live, wrong team        3.8%    11.4s
+    we abstain                   1.5%     4.4s
+    possessions: theirs 13, ours 14; matched at IoU 0.5: 10
+    unmatched possessions of theirs: 3 (1 are 2 s or shorter)
+      13:08.24 4.7s A  14:29.76 12.0s H  14:41.72 1.4s A
+
+====================================================================================================
+WIN2   frames 143308-150808   video 95:32.32 - 100:32.32   match 64:42.6 - 69:42.6
+
+win2 possessions 15, ours 22.  frames disagreeing 16.6% (49.8s)
+'.' = same label continuing from the row above. '≠' = the two disagree on this row.
+
+  video      match        dur  #   them  #   ours     why/rules (ours)
+  95:32.32   64:42.6    30.7s  1   A     1   A        held
+  96:03.04   65:13.4     0.3s        .       D     ≠  dead: clf (rules: oob)
+  96:03.32   65:13.6     3.4s      D           .      
+  96:06.68   65:17.0     4.1s  2   H           .   ≠  
+  96:10.80   65:21.1    26.5s        .   2   H        restart
+  96:37.32   65:47.6     4.4s        .   3   A     ≠  touch
+  96:41.68   65:52.0     2.5s        .   4   H        evidence
+  96:44.16   65:54.5     2.2s        .   5   A     ≠  touch
+  96:46.40   65:56.7    23.8s        .   6   H        touch
+  97:10.24   66:20.6     0.1s      D           .   ≠  
+  97:10.32   66:20.6     1.6s        .   7   A     ≠  evidence
+  97:11.96   66:22.3    42.0s        .       D        dead: clf (rules: lost+slow)  restart@97:53.96
+  97:53.96   67:04.3     0.9s        .   8   H     ≠  held
+  97:54.88   67:05.2     0.9s  3   H           .      
+  97:55.80   67:06.1     0.0s  4   A           .   ≠  
+  97:55.84   67:06.2     1.6s        .   9   A        touch
+  97:57.44   67:07.8     2.5s        .   10  H     ≠  evidence
+  97:59.96   67:10.3     2.8s  5   H           .      
+  98:02.72   67:13.0     1.4s      D           .   ≠  
+  98:04.16   67:14.5     5.2s        .       D        dead: clf (rules: oob)
+  98:09.36   67:19.7     5.9s  6   A           .   ≠  
+  98:15.24   67:25.6     0.7s        .   11  H     ≠  evidence@+17
+  98:15.92   67:26.2     8.5s        .   12  A        evidence
+  98:24.44   67:34.8     6.4s        .   13  H     ≠  held
+  98:30.80   67:41.1    10.3s        .   14  A        touch
+  98:41.08   67:51.4     0.1s  7   H           .   ≠  
+  98:41.16   67:51.5     1.4s        .   15  H        touch
+  98:42.56   67:52.9     0.3s        .   16  A     ≠  evidence
+  98:42.88   67:53.2     4.6s  8   A           .      
+  98:47.48   67:57.8     1.4s        .   17  H     ≠  touch
+  98:48.92   67:59.2    15.8s        .   18  A        touch
+  99:04.76   68:15.1     0.4s      D           .   ≠  
+  99:05.12   68:15.4     6.4s        .   19  H     ≠  evidence
+  99:11.48   68:21.8    28.7s  9   H           .      
+  99:40.20   68:50.5     0.6s  10  A           .   ≠  
+  99:40.76   68:51.1     4.8s        .   20  A        touch
+  99:45.56   68:55.9     1.7s        .   21  H     ≠  evidence
+  99:47.24   68:57.6     1.0s  11  H           .      
+  99:48.20   68:58.5     2.0s  12  A           .   ≠  
+  99:50.20   69:00.5     3.3s  13  H           .      
+  99:53.48   69:03.8     0.1s      D           .   ≠  
+  99:53.56   69:03.9    25.7s        .       D        dead: clf (rules: lost+oob+slow)  restart@100:19.24
+  100:19.24  69:29.6     1.4s        .   22  H     ≠  held
+  100:20.64  69:31.0     4.2s  14  H           .      
+  100:24.84  69:35.2     4.5s  15  A           .   ≠  
+  100:29.32  69:39.6     0.5s      D           .   ≠  
+  100:29.80  69:40.1     2.5s        .       D        dead: clf (rules: oob)
+
+  WHERE THE GAP IS
+    frames agreeing        83.4%
+    we say dead, they say live   3.4%    10.3s
+    we say live, they say dead   4.3%    12.8s
+    both live, wrong team        8.9%    26.8s
+    we abstain                   0.0%     0.0s
+    possessions: theirs 15, ours 22; matched at IoU 0.5: 5
+    unmatched possessions of theirs: 10 (3 are 2 s or shorter)
+      96:06.68 63.6s H  97:54.88 0.9s H  97:55.80 4.2s A  97:59.96 2.8s H  98:09.36 31.7s A  99:47.24 1.0s H  99:48.20 2.0s A  99:50.20 3.3s H  100:20.64 4.2s H  100:24.84 4.5s A
+
+====================================================================================================
+WIN3   frames 178308-185808   video 118:52.32 - 123:52.32   match 88:02.6 - 93:02.6
+
+win3 possessions 16, ours 16.  frames disagreeing 22.0% (66.0s)
+'.' = same label continuing from the row above. '≠' = the two disagree on this row.
+
+  video      match        dur  #   them  #   ours     why/rules (ours)
+  118:52.32  88:02.6    20.0s  1   A     1   A        held
+  119:12.28  88:22.6     1.4s  2   H           .   ≠  
+  119:13.68  88:24.0     0.2s      D           .   ≠  
+  119:13.88  88:24.2    12.4s        .       D        dead: clf (rules: lost+oob)
+  119:26.32  88:36.6     0.8s  3   A           .   ≠  
+  119:27.16  88:37.5    12.8s      D           .      
+  119:39.92  88:50.2     1.2s        .   2   H     ≠  restart
+  119:41.16  88:51.5     1.1s        .   3   A     ≠  touch
+  119:42.24  88:52.6     1.4s  4   A           .      
+  119:43.64  88:54.0     0.2s        .   4   H     ≠  touch
+  119:43.80  88:54.1     1.0s  5   H           .      
+  119:44.84  88:55.2     0.8s        .   5   A     ≠  touch
+  119:45.68  88:56.0     1.6s  6   A           .      
+  119:47.28  88:57.6     0.7s        .       D     ≠  dead: clf+whistle@+0.0s
+  119:47.96  88:58.3    22.2s      D           .      
+  120:10.16  89:20.5     0.1s        .       X     ≠  
+  120:10.24  89:20.6     0.1s        .   6   A     ≠  restart
+  120:10.32  89:20.6     9.8s  7   A           .      
+  120:20.12  89:30.4     2.5s        .   7   H     ≠  touch
+  120:22.64  89:33.0     8.4s  8   H           .      
+  120:31.04  89:41.4     4.4s  9   A           .   ≠  
+  120:35.44  89:45.8     0.9s        .   8   A        touch
+  120:36.36  89:46.7     0.3s        .   9   H     ≠  touch
+  120:36.64  89:47.0     7.0s      D           .   ≠  
+  120:43.64  89:54.0    55.0s        .       D        dead: clf (rules: lost+oob+slow)  restart@121:38.60
+  121:38.60  90:48.9     4.8s        .   10  A     ≠  held
+  121:43.44  90:53.8     6.2s  10  H           .   ≠  
+  121:49.68  91:00.0     0.4s        .       D     ≠  dead: clf (rules: lost+oob)
+  121:50.08  91:00.4     9.1s      D           .      
+  121:59.16  91:09.5     3.6s        .   11  A     ≠  held
+  122:02.80  91:13.1     3.7s  11  A           .      
+  122:06.52  91:16.8     5.2s  12  H           .   ≠  
+  122:11.76  91:22.1    10.9s  13  A           .      
+  122:22.64  91:33.0     6.3s  14  H           .   ≠  
+  122:28.92  91:39.2     0.2s        .   12  H        touch
+  122:29.08  91:39.4     2.2s      D           .   ≠  
+  122:31.32  91:41.6    11.1s        .       D        dead: clf+whistle@+0.7s (rules: lost+slow)  restart@122:42.44
+  122:42.44  91:52.8     1.7s        .   13  A     ≠  restart
+  122:44.16  91:54.5     7.6s        .       D        dead: clf (rules: lost+slow)  restart@122:42.44
+  122:51.76  92:02.1     0.8s        .       X     ≠  
+  122:52.60  92:02.9     1.4s        .   14  H     ≠  restart
+  122:54.00  92:04.3    21.4s  15  H           .      
+  123:15.40  92:25.7     3.0s        .   15  A     ≠  touch
+  123:18.44  92:28.8     2.3s      D           .   ≠  
+  123:20.72  92:31.0    19.7s        .       D        dead: clf (rules: lost+slow)  restart@123:40.40
+  123:40.40  92:50.7     7.0s        .   16  H     ≠  restart
+  123:47.44  92:57.8     4.9s  16  H           .      
+
+  WHERE THE GAP IS
+    frames agreeing        78.0%
+    we say dead, they say live   0.6%     1.9s
+    we say live, they say dead  10.9%    32.8s
+    both live, wrong team       10.1%    30.4s
+    we abstain                   0.3%     0.9s
+    possessions: theirs 16, ours 16; matched at IoU 0.5: 7
+    unmatched possessions of theirs: 9 (2 are 2 s or shorter)
+      119:12.28 1.4s H  119:26.32 0.8s A  120:31.04 5.6s A  121:43.44 6.6s H  122:02.80 3.7s A  122:06.52 5.2s H  122:11.76 10.9s A  122:22.64 6.4s H  123:47.44 4.9s H
+

@@ -49,6 +49,12 @@ GRIDS = {
     "A": {"margin_m": [0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5],
           "k_fallback": [10, 15, 20, 25, 35, 50, 75],
           "use_touch": [False, True]},
+    # How hard it is for a detected touch to carry possession. exp08's side-by-side on the match
+    # shows real possessions split into H -> A -> H with sub-2 s fragments, each marked "touch";
+    # this asks IDSSE whether a stricter confirmation removes them.
+    "C": {"k_confirm": [25, 50, 75],
+          "confirm_fraction": [0.6, 0.75, 0.9],
+          "confirm_min_seen": [5, 15, 30]},
     "B": {"slow_speed": [1.1, 1.2, 1.3, 1.4, 1.5],
           "slow_min_frames": [100, 150, 200, 300],
           "max_dead": [375, 750, 1500],

@@ -55,6 +55,11 @@ MAX_GLIDE_HZ = 120.0       # about 5 bins between frames
 MIN_DURATION_S = 0.15
 MAX_DURATION_S = 3.0       # the long whistle at the end of a half is about this; a tone that
                            # lasts longer is background, not a whistle
+# A pea whistle warbles, and at this 42.7 ms analysis window the gaps between warble pulses can
+# break one blast into several runs. Bridging gaps up to 0.25 s was tried to repair that and made
+# things worse: merged runs then exceeded MAX_DURATION_S, so three of the four known referee
+# blasts were rejected as too long. Left at 0.05 s; a bridge would need MAX_DURATION_S raised with
+# it, and that pair was not worth another match-side experiment. See README.md.
 MAX_BREAK_S = 0.05
 ONSET_DB = 6.0             # a whistle starts abruptly: the band is this much louder than its
 ONSET_LOOKBACK_S = 2.0     # median over the preceding two seconds
@@ -79,10 +84,25 @@ MIN_EVENT_S = 0.5
 # 34-36 dB bin to 3 in the next, leaving a loud tail of about 20. The cut was first set at that
 # knee, 35 dB, read off the distribution with no labels.
 #
-# It was then raised to 36 dB, and that step WAS fitted to the match: a 35.46 dB event at 13:47 in
-# hand window win1 started a false stoppage, and the team confirmed on video it is not a whistle.
-# The margin is thin -- the real second-half kickoff whistle is 35.70 dB and is dropped too, which
-# costs nothing here because kickoffs are found from the ball. Treat 36 as tuned on win1.
+# It was then raised to 36 dB to remove one event in hand window win1 that the team confirmed on
+# video is not a whistle -- and that was fitting to the match. It also proved far too strict: at
+# 36 dB the whole recording yields 29 whistles, while a football match has roughly 90-120 whistled
+# stoppages, and a genuine blast the team spotted at video 120:36 (30.2 dB) was thrown away.
+#
+#
+# 30 dB was tried, the cut at which the detector returns a match-like number of whistles rather
+# than 29. It did not pay: with no bridging it finds 53 whistles, still misses the 120:36 blast
+# (whose run is 0.31 s, under MIN_EVENT_S), ties on spellF1 and loses 0.021 pooled macroF1. The
+# extra quiet whistles lower the classifier's threshold in places where play is live. So the
+# count argument is sound and the detector still cannot use it: what is missing is a way to tell
+# a referee from a crowd, not a better volume setting.
+#
+# A warble feature was tried as a principled replacement for a loudness cut (a referee's pea
+# whistle wobbles, a crowd's does not). On the seven events whose nature is known it separates
+# four of five referee blasts from the quiet crowd one, and the missed 120:36 blast has the
+# strongest warble of all -- but the confirmed false positive at 13:47 scores 153, inside the
+# referee range, so it does not replace this cut. Seven examples, all from the match, is too few
+# to set a threshold on.
 LOUD_DB = 36.0
 CHORUS_S = 4.0             # a blast counts only if no other tone of MIN_EVENT_S or more began
                            # in the CHORUS_S before it. Both kinds of sound are surrounded by

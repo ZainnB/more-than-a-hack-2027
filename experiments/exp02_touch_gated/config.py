@@ -79,6 +79,11 @@ SG_ORDER = 2
 # a full second late. This backdates the change to the touch, so confirmation decides *whether*
 # possession changed without also deciding *when*. That is what should move the transition metrics,
 # where exp01 scores transF1 0.35 with 13 missed and 13 spurious.
+# Whether a touch must be confirmed by K_CONFIRM frames of nearest-team evidence before it hands
+# the ball over. True is the design as built. exp09 turns it off when its learned touch model
+# supplies the touches: confirming with proximity is what favoured pressers (LEARNINGS lesson 7).
+TOUCH_CONFIRM = True
+
 K_CONFIRM = 25
 
 # Possessions shorter than this are merged into their neighbour unless a confirmed touch bounds
